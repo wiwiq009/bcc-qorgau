@@ -334,6 +334,33 @@ const translations = {
     }
 };
 
+const findingTranslations = {
+    "Запрос конфиденциальных данных": {
+        name: "Құпия деректерді сұрау",
+        reason: "Алаяқтар құпиясөздерді, PIN-кодтарды немесе SMS-кодтарды алуға тырысуы мүмкін."
+    },
+    "Срочность и давление": {
+        name: "Асықтыру және қысым көрсету",
+        reason: "Хабарлама алушыны асығыс әрекет жасауға мәжбүрлеуге тырысады."
+    },
+    "Подозрительная ссылка": {
+        name: "Күдікті сілтеме",
+        reason: "Сілтеме жеке деректерді ұрлауға арналған жалған сайтқа апаруы мүмкін."
+    },
+    "Требование перевести деньги": {
+        name: "Ақша аударуды талап ету",
+        reason: "Күтпеген ақша аудару талабы алаяқтық белгісі болуы мүмкін."
+    },
+    "Обещание лёгкой выгоды": {
+        name: "Оңай пайда уәдесі",
+        reason: "Кепілді табыс немесе күтпеген ұтыс туралы уәделер алдау болуы мүмкін."
+    },
+    "Угроза или запугивание": {
+        name: "Қорқыту немесе қоқан-лоқы көрсету",
+        reason: "Бұғаттау немесе жазалау туралы қорқыту адамдарға қысым жасау үшін қолданылуы мүмкін."
+    }
+};
+
 function setLanguage(language) {
     currentLanguage = language;
     const t = translations[language];
@@ -356,7 +383,89 @@ function setLanguage(language) {
     document.getElementById("ruBtn").classList.toggle("active", language === "ru");
     document.getElementById("kzBtn").classList.toggle("active", language === "kz");
 
-    document.getElementById("result").style.display = "none";
+    const result = document.getElementById("result");
+
+    if (result.style.display !== "none") {
+        if (lastAnalysis) {
+            displayAnalysis(lastAnalysis);
+        }
+    }
+}
+
+let lastAnalysis = null;
+
+function displayAnalysis(data) {
+    const t = translations[currentLanguage];
+
+    let levelText;
+    let levelColor;
+    let adviceText;
+
+    if (data.level === "HIGH") {
+        levelText = t.high;
+        levelColor = "#ff5252";
+        adviceText = t.highAdvice;
+    } else if (data.level === "MEDIUM") {
+        levelText = t.medium;
+        levelColor = "#ffb020";
+        adviceText = t.mediumAdvice;
+    } else {
+        levelText = t.low;
+        levelColor = "#35d39a";
+        adviceText = t.lowAdvice;
+    }
+
+    const level = document.getElementById("level");
+    level.textContent = levelText;
+    level.style.color = levelColor;
+
+    const score = document.getElementById("score");
+    score.textContent = data.score + "/100";
+    score.style.color = levelColor;
+
+    const bar = document.getElementById("barFill");
+    bar.style.width = data.score + "%";
+    bar.style.background = levelColor;
+
+    const findings = document.getElementById("findings");
+    findings.innerHTML = "";
+
+    if (data.findings && data.findings.length > 0) {
+        data.findings.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "finding";
+
+            const translated = findingTranslations[item.name];
+
+            const heading = document.createElement("strong");
+            heading.textContent = "⚠ " +
+                (currentLanguage === "kz" && translated
+                    ? translated.name
+                    : item.name) +
+                " (+" + item.points + ")";
+
+            const reason = document.createElement("p");
+            reason.textContent =
+                currentLanguage === "kz" && translated
+                    ? translated.reason
+                    : item.reason;
+
+            const phrases = document.createElement("p");
+            phrases.textContent = t.phrases + ": " +
+                (item.matched_phrases || []).join(", ");
+
+            div.appendChild(heading);
+            div.appendChild(reason);
+            div.appendChild(phrases);
+
+            findings.appendChild(div);
+        });
+    } else {
+        findings.textContent = t.noFindings;
+    }
+
+    document.getElementById("advice").textContent =
+        t.adviceTitle + ": " + adviceText;
 }
 
 async function analyze() {
@@ -386,7 +495,7 @@ async function analyze() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({message: message})
+            body: JSON.stringify({ message: message })
         });
 
         const data = await response.json();
@@ -395,74 +504,15 @@ async function analyze() {
             throw new Error(data.error || t.error);
         }
 
-        let levelText;
-        let levelColor;
-        let adviceText;
-
-        if (data.level === "HIGH") {
-            levelText = t.high;
-            levelColor = "#ff5252";
-            adviceText = t.highAdvice;
-        } else if (data.level === "MEDIUM") {
-            levelText = t.medium;
-            levelColor = "#ffb020";
-            adviceText = t.mediumAdvice;
-        } else {
-            levelText = t.low;
-            levelColor = "#35d39a";
-            adviceText = t.lowAdvice;
-        }
-
-        document.getElementById("level").textContent = levelText;
-        document.getElementById("level").style.color = levelColor;
-
-        document.getElementById("score").textContent =
-            data.score + "/100";
-
-        document.getElementById("score").style.color = levelColor;
-
-        const bar = document.getElementById("barFill");
-        bar.style.width = data.score + "%";
-        bar.style.background = levelColor;
-
-        const findings = document.getElementById("findings");
-        findings.innerHTML = "";
-
-        if (data.findings && data.findings.length > 0) {
-            data.findings.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "finding";
-
-                const heading = document.createElement("strong");
-                heading.textContent = "⚠ " + item.name +
-                    " (+" + item.points + ")";
-
-                const reason = document.createElement("p");
-                reason.textContent = item.reason;
-
-                const phrases = document.createElement("p");
-                phrases.textContent = t.phrases + ": " +
-                    (item.matched_phrases || []).join(", ");
-
-                div.appendChild(heading);
-                div.appendChild(reason);
-                div.appendChild(phrases);
-
-                findings.appendChild(div);
-            });
-        } else {
-            findings.textContent = t.noFindings;
-        }
-
-        document.getElementById("advice").textContent =
-            t.adviceTitle + ": " + adviceText;
+        lastAnalysis = data;
+        displayAnalysis(data);
 
     } catch (error) {
         document.getElementById("advice").textContent =
             error.message || t.error;
     } finally {
         button.disabled = false;
-        button.textContent = t.analyze;
+        button.textContent = translations[currentLanguage].analyze;
     }
 }
 </script>
