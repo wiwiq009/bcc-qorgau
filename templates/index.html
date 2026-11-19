@@ -4,518 +4,419 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BCC QORGAU</title>
-
+<title>BCC QORGAU — цифровая защита</title>
 <style>
-* {
-    box-sizing: border-box;
+:root {
+  --green:#16866b;
+  --green-dark:#106b56;
+  --mint:#e8f7f1;
+  --ink:#17342f;
+  --muted:#71847e;
+  --line:#e4eee9;
+  --white:#fff;
+  --bg:#f5faf7;
+  --red:#d94b4b;
+  --orange:#d78b26;
 }
-
-body {
-    margin: 0;
-    padding: 25px 15px;
-    min-height: 100vh;
-    background: #081426;
-    color: #f5f7fb;
-    font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
 }
-
-.container {
-    max-width: 760px;
-    margin: auto;
+button,textarea{font:inherit}
+button{cursor:pointer}
+header{
+  background:rgba(255,255,255,.94);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:5;
 }
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 35px;
+.nav{
+  max-width:1100px;margin:auto;padding:15px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:15px;
 }
-
-.logo {
-    font-size: 25px;
-    font-weight: bold;
-    color: #55a4ff;
-    letter-spacing: 1px;
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:19px;letter-spacing:-.5px}
+.logo{
+  width:39px;height:39px;border-radius:13px;background:var(--green);
+  display:grid;place-items:center;color:white;font-size:21px;
 }
-
-.logo span {
-    color: white;
+.brand small{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700}
+.lang{display:flex;gap:5px;background:#f0f5f2;padding:4px;border-radius:12px}
+.lang button{border:0;background:transparent;padding:8px 12px;border-radius:9px;color:var(--muted);font-weight:750}
+.lang button.active{background:white;color:var(--green);box-shadow:0 2px 8px #17342f12}
+main{max-width:900px;margin:auto;padding:38px 20px 65px}
+.hero{text-align:center;padding:24px 0 30px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--mint);color:var(--green-dark);
+  padding:8px 13px;border-radius:30px;font-size:12px;font-weight:800;
 }
-
-.lang button {
-    background: #1b2b43;
-    color: white;
-    border: 1px solid #344967;
-    padding: 9px 13px;
-    border-radius: 8px;
-    cursor: pointer;
+.dot{width:7px;height:7px;background:#24a77e;border-radius:50%}
+h1{font-size:clamp(30px,6vw,49px);line-height:1.1;letter-spacing:-1.8px;margin:20px 0 13px}
+.hero p{color:var(--muted);font-size:16px;line-height:1.65;max-width:590px;margin:auto}
+.panel{
+  background:white;border:1px solid var(--line);border-radius:23px;
+  padding:25px;box-shadow:0 12px 40px #214c3710;
 }
-
-.lang button.active {
-    background: #2878ff;
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.panel-head h2{font-size:18px;margin:0}
+.counter{font-size:12px;color:var(--muted)}
+textarea{
+  width:100%;min-height:155px;resize:vertical;
+  border:1.5px solid var(--line);border-radius:15px;padding:17px;
+  color:var(--ink);background:#fbfdfb;outline:none;line-height:1.6;
 }
-
-.hero {
-    text-align: center;
-    margin-bottom: 30px;
+textarea:focus{border-color:#62b99e;box-shadow:0 0 0 3px #16866b12}
+textarea::placeholder{color:#9aaba4}
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 18px}
+.example{
+  border:1px solid var(--line);background:white;color:#557068;
+  padding:9px 12px;border-radius:10px;font-size:12px;font-weight:700;
 }
-
-.hero h1 {
-    font-size: 34px;
-    margin-bottom: 10px;
+.example:hover{border-color:var(--green);color:var(--green)}
+.primary{
+  width:100%;border:0;border-radius:13px;padding:15px;
+  background:var(--green);color:white;font-size:15px;font-weight:800;
+  box-shadow:0 6px 15px #16866b25;transition:.2s;
 }
-
-.hero p {
-    color: #9aacc4;
-    line-height: 1.6;
+.primary:hover{background:var(--green-dark);transform:translateY(-1px)}
+.primary:disabled{opacity:.6;cursor:wait;transform:none}
+.privacy{display:flex;gap:9px;align-items:flex-start;margin-top:15px;color:var(--muted);font-size:12px;line-height:1.5}
+.result{display:none;margin-top:22px}
+.result.show{display:block;animation:appear .35s ease}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.result-card{background:white;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 10px 30px #214c370b}
+.result-top{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.result-top h2{margin:0;font-size:19px}
+.score{font-size:35px;font-weight:900;letter-spacing:-1px}
+.score small{font-size:14px;color:var(--muted);font-weight:600}
+.status{display:inline-block;padding:8px 12px;border-radius:30px;font-size:12px;font-weight:850;margin-top:12px}
+.status.HIGH{background:#fff0ee;color:#c53f3f}
+.status.MEDIUM{background:#fff5e6;color:#b77716}
+.status.LOW{background:#e8f7ef;color:#16845e}
+.bar{height:10px;background:#edf2ef;border-radius:20px;overflow:hidden;margin:18px 0}
+.bar-fill{height:100%;width:0;border-radius:20px;transition:width .7s ease}
+.bar-fill.HIGH{background:#df5953}
+.bar-fill.MEDIUM{background:#e7a53e}
+.bar-fill.LOW{background:#29a77c}
+.advice{background:#f4faf6;border-radius:14px;padding:15px;line-height:1.6;font-size:14px;margin-top:17px}
+.section-title{font-size:16px;font-weight:850;margin:23px 0 12px}
+.finding{
+  border:1px solid var(--line);border-radius:13px;padding:14px;
+  margin-top:9px;background:#fff;
 }
-
-.card {
-    background: #14243a;
-    border: 1px solid #263b57;
-    border-radius: 18px;
-    padding: 25px;
-    margin-bottom: 20px;
-}
-
-.card h2 {
-    margin-top: 0;
-    font-size: 21px;
-}
-
-textarea {
-    width: 100%;
-    min-height: 155px;
-    padding: 15px;
-    border: 1px solid #3b506d;
-    border-radius: 12px;
-    background: #0b192c;
-    color: white;
-    font-size: 16px;
-    resize: vertical;
-}
-
-textarea:focus {
-    outline: 2px solid #2878ff;
-}
-
-textarea::placeholder {
-    color: #8293aa;
-}
-
-.analyze {
-    width: 100%;
-    margin-top: 15px;
-    padding: 15px;
-    border: none;
-    border-radius: 10px;
-    background: #2878ff;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.analyze:disabled {
-    opacity: 0.6;
-}
-
-.result {
-    display: none;
-    margin-top: 22px;
-    padding: 20px;
-    border-radius: 13px;
-    background: #0b192c;
-}
-
-.score {
-    font-size: 38px;
-    font-weight: bold;
-    margin: 12px 0;
-}
-
-.level {
-    font-weight: bold;
-    font-size: 18px;
-}
-
-.bar {
-    height: 10px;
-    background: #293b52;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 15px 0;
-}
-
-.bar-fill {
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s;
-}
-
-.finding {
-    background: #192c43;
-    padding: 14px;
-    border-radius: 9px;
-    margin: 10px 0;
-    color: #e1eaf6;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-}
-
-.finding p {
-    margin: 8px 0 0;
-    color: #b8c9df;
-    font-size: 14px;
-}
-
-.advice {
-    margin-top: 18px;
-    padding: 14px;
-    border-left: 4px solid #2878ff;
-    background: #14243a;
-    border-radius: 6px;
-    line-height: 1.5;
-}
-
-footer {
-    text-align: center;
-    color: #71839d;
-    font-size: 13px;
-    margin-top: 30px;
-    line-height: 1.6;
-}
-
-@media (max-width: 500px) {
-    .hero h1 {
-        font-size: 27px;
-    }
-
-    .card {
-        padding: 18px;
-    }
+.finding-head{display:flex;justify-content:space-between;gap:10px;font-weight:800;font-size:14px}
+.points{color:var(--red);font-size:12px;white-space:nowrap}
+.finding p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.matches{font-size:11px;color:#a16b29;margin-top:8px;overflow-wrap:anywhere}
+.empty{color:var(--muted);font-size:13px;padding:10px 0}
+.history{margin-top:20px;background:white;border:1px solid var(--line);border-radius:18px;padding:20px}
+.history-head{display:flex;justify-content:space-between;align-items:center}
+.history h3{font-size:15px;margin:0}
+.clear{border:0;background:transparent;color:var(--muted);font-size:12px}
+.history-list{display:flex;flex-direction:column;gap:8px;margin-top:13px}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f8fbf9;border-radius:10px;font-size:13px}
+.history-item strong{font-size:12px}
+.about{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.about-card{background:white;border:1px solid var(--line);border-radius:16px;padding:17px}
+.about-card .ico{font-size:23px}
+.about-card h3{font-size:13px;margin:10px 0 6px}
+.about-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+.disclaimer{margin-top:20px;background:#fff9ed;border:1px solid #f3e7ca;border-radius:14px;padding:15px;color:#826a3c;font-size:12px;line-height:1.6}
+footer{text-align:center;color:#91a19b;font-size:11px;padding:25px 15px}
+@media(max-width:600px){
+ main{padding:24px 14px 45px}
+ .hero{padding:20px 0 24px}
+ .panel,.result-card{padding:18px}
+ .about{grid-template-columns:1fr}
+ .result-top{align-items:flex-start}
+ .score{font-size:29px}
 }
 </style>
 </head>
-
 <body>
-<div class="container">
-
 <header>
-    <div class="logo">BCC <span>QORGAU</span></div>
-
-    <div class="lang">
-        <button id="ruBtn" class="active"
-            onclick="setLanguage('ru')">RU</button>
-        <button id="kzBtn"
-            onclick="setLanguage('kz')">KZ</button>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">🛡</div>
+      <div>BCC QORGAU<small>DIGITAL SAFETY</small></div>
     </div>
+    <div class="lang">
+      <button id="ruBtn" class="active" onclick="setLang('ru')">RU</button>
+      <button id="kzBtn" onclick="setLang('kz')">KZ</button>
+    </div>
+  </div>
 </header>
 
-<section class="hero">
-    <h1 id="title">Твоя цифровая защита</h1>
-    <p id="subtitle">
-        Проверяй подозрительные SMS и сообщения.
-        Защищай свои личные данные от мошенников.
-    </p>
-</section>
+<main>
+  <section class="hero">
+    <div class="pill"><span class="dot"></span><span data-i18n="pill">ПРОВЕРКА СООБЩЕНИЙ</span></div>
+    <h1 data-i18n="headline">Остановись на секунду.<br>Проверь сообщение.</h1>
+    <p data-i18n="subtitle">Подозрительное SMS или сообщение? Вставь его сюда — сервис проверит признаки возможного мошенничества и подскажет, что делать дальше.</p>
+  </section>
 
-<div class="card">
-    <h2 id="formTitle">Проверка сообщения</h2>
-
-    <p id="formDescription">
-        Вставь подозрительное SMS или сообщение:
-    </p>
-
-    <textarea id="message"
-        placeholder="Вставьте сообщение сюда..."></textarea>
-
-    <button class="analyze" id="analyzeBtn"
-        onclick="analyze()">
-        Проверить сообщение
-    </button>
-
-    <div class="result" id="result">
-        <h2 id="resultTitle">Результат анализа</h2>
-
-        <div class="level" id="level"></div>
-        <div class="score" id="score"></div>
-
-        <div class="bar">
-            <div class="bar-fill" id="barFill"></div>
-        </div>
-
-        <h3 id="findingsTitle">Обнаруженные признаки</h3>
-        <div id="findings"></div>
-
-        <div class="advice" id="advice"></div>
+  <section class="panel">
+    <div class="panel-head">
+      <h2 data-i18n="inputTitle">Проверка сообщения</h2>
+      <span class="counter"><span id="count">0</span>/3000</span>
     </div>
-</div>
+    <textarea id="message" maxlength="3000" data-placeholder="placeholder" placeholder="Вставь сюда текст подозрительного SMS или сообщения..."></textarea>
+    <div class="examples">
+      <button class="example" onclick="demo('safe')" data-i18n="safeDemo">＋ Безопасный пример</button>
+      <button class="example" onclick="demo('danger')" data-i18n="dangerDemo">＋ Подозрительный пример</button>
+    </div>
+    <button class="primary" id="checkBtn" onclick="analyze()" data-i18n="check">Проверить сообщение →</button>
+    <div class="privacy"><span>🔒</span><span data-i18n="privacy">Не вводи настоящие пароли, PIN, CVV, коды из SMS или банковские данные. Для проверки используй только текст сообщения.</span></div>
+  </section>
 
-<div class="card">
-    <h2 id="aboutTitle">О проекте</h2>
-    <p id="aboutText">
-        BCC QORGAU — инструмент предварительной проверки
-        подозрительных сообщений для повышения
-        финансовой безопасности.
-    </p>
-</div>
+  <section class="result" id="result">
+    <div class="result-card">
+      <div class="result-top">
+        <h2 data-i18n="resultTitle">Результат анализа</h2>
+        <div class="score"><span id="score">0</span><small>/100</small></div>
+      </div>
+      <div><span class="status LOW" id="status">НИЗКИЙ РИСК</span></div>
+      <div class="bar"><div class="bar-fill LOW" id="barFill"></div></div>
+      <div class="advice" id="advice"></div>
+      <div class="section-title" data-i18n="findingsTitle">Что обнаружено</div>
+      <div id="findings"></div>
+    </div>
+  </section>
 
-<footer>
-    BCC QORGAU © 2026<br>
-    <span id="footerText">
-        Безопасность начинается с внимательности.
-    </span><br>
-    <span id="disclaimer">
-        Результат является предварительной оценкой,
-        а не гарантией безопасности.
-    </span>
-</footer>
+  <section class="history" id="history">
+    <div class="history-head">
+      <h3 data-i18n="historyTitle">Последние проверки</h3>
+      <button class="clear" onclick="clearHistory()" data-i18n="clear">Очистить</button>
+    </div>
+    <div class="history-list" id="historyList"><div class="empty" data-i18n="noHistory">Пока проверок нет.</div></div>
+  </section>
 
-</div>
+  <section class="about">
+    <div class="about-card"><div class="ico">🔍</div><h3 data-i18n="about1Title">Анализ признаков</h3><p data-i18n="about1Text">Поиск подозрительных ссылок, просьб о переводе денег и запросов личных данных.</p></div>
+    <div class="about-card"><div class="ico">⚡</div><h3 data-i18n="about2Title">Быстрый результат</h3><p data-i18n="about2Text">Оценка риска и понятное объяснение обнаруженных признаков.</p></div>
+    <div class="about-card"><div class="ico">🌐</div><h3 data-i18n="about3Title">Два языка</h3><p data-i18n="about3Text">Интерфейс и анализ доступны на русском и казахском языках.</p></div>
+  </section>
+
+  <div class="disclaimer" data-i18n="disclaimer">Важно: BCC QORGAU — демонстрационный прототип с анализом по заданным правилам. Он не является банковской системой и не использует обученную модель искусственного интеллекта. Результат не гарантирует безопасность сообщения. При сомнениях свяжись с организацией через её официальный сайт или приложение.</div>
+</main>
+
+<footer>© 2026 BCC QORGAU · DIGITAL SAFETY PROJECT</footer>
 
 <script>
-let currentLanguage = "ru";
-
 const translations = {
-    ru: {
-        title: "Твоя цифровая защита",
-        subtitle: "Проверяй подозрительные SMS и сообщения. Защищай свои личные данные от мошенников.",
-        formTitle: "Проверка сообщения",
-        formDescription: "Вставь подозрительное SMS или сообщение:",
-        placeholder: "Вставьте сообщение сюда...",
-        analyze: "Проверить сообщение",
-        loading: "Анализируем...",
-        resultTitle: "Результат анализа",
-        findingsTitle: "Обнаруженные признаки",
-        aboutTitle: "О проекте",
-        aboutText: "BCC QORGAU — инструмент предварительной проверки подозрительных сообщений для повышения финансовой безопасности.",
-        footer: "Безопасность начинается с внимательности.",
-        disclaimer: "Результат является предварительной оценкой, а не гарантией безопасности.",
-        empty: "Введите сообщение для проверки.",
-        error: "Ошибка соединения. Попробуйте ещё раз.",
-        high: "ВЫСОКИЙ РИСК",
-        medium: "СРЕДНИЙ РИСК",
-        low: "НИЗКИЙ РИСК",
-        adviceTitle: "Рекомендация",
-        highAdvice: "Не переходите по ссылкам и не передавайте личные данные. Проверьте отправителя через официальный канал.",
-        mediumAdvice: "Будьте осторожны. Проверьте отправителя и содержание сообщения.",
-        lowAdvice: "Явных признаков из нашей базы правил не обнаружено. Это не гарантирует безопасность сообщения.",
-        noFindings: "Подозрительные признаки не обнаружены.",
-        phrases: "Найденные фразы"
-    },
-
-    kz: {
-        title: "Сенің цифрлық қорғанысың",
-        subtitle: "Күдікті SMS пен хабарламаларды тексер. Жеке деректеріңді алаяқтардан қорға.",
-        formTitle: "Хабарламаны тексеру",
-        formDescription: "Күдікті SMS немесе хабарламаны енгіз:",
-        placeholder: "Хабарламаны осында енгізіңіз...",
-        analyze: "Хабарламаны тексеру",
-        loading: "Тексерілуде...",
-        resultTitle: "Талдау нәтижесі",
-        findingsTitle: "Анықталған белгілер",
-        aboutTitle: "Жоба туралы",
-        aboutText: "BCC QORGAU — қаржылық қауіпсіздікті арттыру үшін күдікті хабарламаларды алдын ала тексеру құралы.",
-        footer: "Қауіпсіздік мұқияттылықтан басталады.",
-        disclaimer: "Нәтиже алдын ала бағалау болып табылады және қауіпсіздікке кепілдік бермейді.",
-        empty: "Тексеру үшін хабарлама енгізіңіз.",
-        error: "Қосылу қатесі. Қайталап көріңіз.",
-        high: "ЖОҒАРЫ ҚАУІП",
-        medium: "ОРТАША ҚАУІП",
-        low: "ТӨМЕН ҚАУІП",
-        adviceTitle: "Ұсыныс",
-        highAdvice: "Сілтемелерге өтпеңіз және жеке деректеріңізді бермеңіз. Жіберушіні ресми арна арқылы тексеріңіз.",
-        mediumAdvice: "Сақ болыңыз. Жіберушіні және хабарлама мазмұнын тексеріңіз.",
-        lowAdvice: "Ережелер базасынан айқын күдікті белгілер табылмады. Бұл хабарламаның қауіпсіз екеніне кепілдік бермейді.",
-        noFindings: "Күдікті белгілер анықталмады.",
-        phrases: "Табылған күдікті сөздер"
-    }
+ru:{
+pill:"ПРОВЕРКА СООБЩЕНИЙ",
+headline:"Остановись на секунду.<br>Проверь сообщение.",
+subtitle:"Подозрительное SMS или сообщение? Вставь его сюда — сервис проверит признаки возможного мошенничества и подскажет, что делать дальше.",
+inputTitle:"Проверка сообщения",
+placeholder:"Вставь сюда текст подозрительного SMS или сообщения...",
+safeDemo:"＋ Безопасный пример",dangerDemo:"＋ Подозрительный пример",
+check:"Проверить сообщение →",checking:"Анализируем...",
+privacy:"Не вводи настоящие пароли, PIN, CVV, коды из SMS или банковские данные. Для проверки используй только текст сообщения.",
+resultTitle:"Результат анализа",findingsTitle:"Что обнаружено",
+historyTitle:"Последние проверки",clear:"Очистить",noHistory:"Пока проверок нет.",
+about1Title:"Анализ признаков",about1Text:"Поиск подозрительных ссылок, просьб о переводе денег и запросов личных данных.",
+about2Title:"Быстрый результат",about2Text:"Оценка риска и понятное объяснение обнаруженных признаков.",
+about3Title:"Два языка",about3Text:"Интерфейс и анализ доступны на русском и казахском языках.",
+disclaimer:"Важно: BCC QORGAU — демонстрационный прототип с анализом по заданным правилам. Он не является банковской системой и не использует обученную модель искусственного интеллекта. Результат не гарантирует безопасность сообщения. При сомнениях свяжись с организацией через её официальный сайт или приложение.",
+empty:"Вставь текст сообщения для проверки.",
+error:"Не удалось выполнить анализ. Попробуй ещё раз.",
+high:"ВЫСОКИЙ РИСК",medium:"СРЕДНИЙ РИСК",low:"НИЗКИЙ РИСК",
+highAdvice:"Обнаружены серьёзные признаки возможного мошенничества. Не переходи по ссылкам, не отправляй деньги и не сообщай личные данные. Проверь отправителя через официальный канал.",
+mediumAdvice:"Есть подозрительные признаки. Будь осторожен: не открывай неизвестные ссылки и не передавай личные данные. Проверь информацию независимо.",
+lowAdvice:"Сервис не обнаружил много известных признаков мошенничества. Но это не доказывает безопасность сообщения. Проверяй отправителя и ссылки самостоятельно.",
+noFindings:"Явные признаки по правилам сервиса не обнаружены. Это не гарантия безопасности.",
+historyRisk:"Риск",historyScore:"баллов",rule:"правило",rules:"правил",
+names:{
+"Confidential data request":"Запрос конфиденциальных данных",
+"Urgency or pressure":"Срочность и давление",
+"Suspicious link":"Подозрительная ссылка",
+"Money transfer request":"Просьба перевести деньги",
+"Easy profit promise":"Обещание лёгкой прибыли",
+"Threat or intimidation":"Угрозы и запугивание"
+},
+reasons:{
+"Confidential data request":"Сообщение может запрашивать PIN, CVV, пароль или SMS-код.",
+"Urgency or pressure":"Отправитель пытается заставить действовать быстро, не проверяя информацию.",
+"Suspicious link":"В сообщении обнаружена ссылка, которая может вести на поддельный сайт.",
+"Money transfer request":"Сообщение содержит просьбу отправить деньги.",
+"Easy profit promise":"Обещание лёгкого или гарантированного заработка может быть обманом.",
+"Threat or intimidation":"Сообщение использует угрозы или запугивание, чтобы повлиять на решение."
+}
+},
+kz:{
+pill:"ХАБАРЛАМАЛАРДЫ ТЕКСЕРУ",
+headline:"Бір сәт тоқта.<br>Хабарламаны тексер.",
+subtitle:"Күдікті SMS немесе хабарлама алдың ба? Мәтінді осында енгіз — сервис алаяқтық белгілерін тексеріп, не істеу керегін ұсынады.",
+inputTitle:"Хабарламаны тексеру",
+placeholder:"Күдікті SMS немесе хабарлама мәтінін осында енгіз...",
+safeDemo:"＋ Қауіпсіз мысал",dangerDemo:"＋ Күдікті мысал",
+check:"Хабарламаны тексеру →",checking:"Тексерілуде...",
+privacy:"Нақты құпиясөздерді, PIN, CVV, SMS кодтарын немесе банк деректерін енгізбе. Тек хабарлама мәтінін пайдалан.",
+resultTitle:"Талдау нәтижесі",findingsTitle:"Анықталған белгілер",
+historyTitle:"Соңғы тексерулер",clear:"Тазарту",noHistory:"Әзірге тексерулер жоқ.",
+about1Title:"Белгілерді талдау",about1Text:"Күдікті сілтемелерді, ақша аудару және жеке деректерді сұрау белгілерін іздеу.",
+about2Title:"Жылдам нәтиже",about2Text:"Қауіп деңгейі және анықталған белгілердің түсіндірмесі.",
+about3Title:"Екі тіл",about3Text:"Интерфейс пен талдау қазақ және орыс тілдерінде қолжетімді.",
+disclaimer:"Маңызды: BCC QORGAU — алдын ала белгіленген ережелер бойынша жұмыс істейтін демонстрациялық прототип. Бұл банк жүйесі емес және оқытылған жасанды интеллект моделін пайдаланбайды. Нәтиже хабарламаның қауіпсіз екеніне кепілдік бермейді. Күмән болса, ұйыммен ресми сайты немесе қосымшасы арқылы байланыс.",
+empty:"Тексеру үшін хабарлама мәтінін енгіз.",
+error:"Талдау орындалмады. Қайталап көр.",
+high:"ЖОҒАРЫ ҚАУІП",medium:"ОРТАША ҚАУІП",low:"ТӨМЕН ҚАУІП",
+highAdvice:"Алаяқтықтың елеулі белгілері анықталды. Сілтемелерге өтпе, ақша жіберме және жеке деректерді берме. Жіберушіні ресми арна арқылы тексер.",
+mediumAdvice:"Күдікті белгілер бар. Белгісіз сілтемелерді ашпа және жеке деректерді берме. Ақпаратты басқа жолмен тексер.",
+lowAdvice:"Сервис белгілі алаяқтық белгілерінің көпшілігін анықтаған жоқ. Бірақ бұл хабарламаның қауіпсіз екенін дәлелдемейді. Жіберуші мен сілтемелерді өзің тексер.",
+noFindings:"Сервис ережелері бойынша айқын белгілер табылмады. Бұл қауіпсіздік кепілдігі емес.",
+historyRisk:"Қауіп",historyScore:"ұпай",rule:"ереже",rules:"ереже",
+names:{
+"Confidential data request":"Құпия деректерді сұрау",
+"Urgency or pressure":"Асықтыру және қысым",
+"Suspicious link":"Күдікті сілтеме",
+"Money transfer request":"Ақша аударуды сұрау",
+"Easy profit promise":"Оңай табыс уәдесі",
+"Threat or intimidation":"Қорқыту және қоқан-лоқы"
+},
+reasons:{
+"Confidential data request":"Хабарлама PIN, CVV, құпиясөз немесе SMS кодын сұрауы мүмкін.",
+"Urgency or pressure":"Жіберуші ақпаратты тексермей, тез әрекет етуге мәжбүрлейді.",
+"Suspicious link":"Хабарламада жалған сайтқа апаруы мүмкін сілтеме бар.",
+"Money transfer request":"Хабарламада ақша аудару туралы өтініш бар.",
+"Easy profit promise":"Оңай немесе кепілді табыс туралы уәде алдау болуы мүмкін.",
+"Threat or intimidation":"Хабарлама шешіміңе әсер ету үшін қорқыту тәсілдерін қолданады."
+}
+}
 };
 
-const findingTranslations = {
-    "Запрос конфиденциальных данных": {
-        name: "Құпия деректерді сұрау",
-        reason: "Алаяқтар құпиясөздерді, PIN-кодтарды немесе SMS-кодтарды алуға тырысуы мүмкін."
-    },
-    "Срочность и давление": {
-        name: "Асықтыру және қысым көрсету",
-        reason: "Хабарлама алушыны асығыс әрекет жасауға мәжбүрлеуге тырысады."
-    },
-    "Подозрительная ссылка": {
-        name: "Күдікті сілтеме",
-        reason: "Сілтеме жеке деректерді ұрлауға арналған жалған сайтқа апаруы мүмкін."
-    },
-    "Требование перевести деньги": {
-        name: "Ақша аударуды талап ету",
-        reason: "Күтпеген ақша аудару талабы алаяқтық белгісі болуы мүмкін."
-    },
-    "Обещание лёгкой выгоды": {
-        name: "Оңай пайда уәдесі",
-        reason: "Кепілді табыс немесе күтпеген ұтыс туралы уәделер алдау болуы мүмкін."
-    },
-    "Угроза или запугивание": {
-        name: "Қорқыту немесе қоқан-лоқы көрсету",
-        reason: "Бұғаттау немесе жазалау туралы қорқыту адамдарға қысым жасау үшін қолданылуы мүмкін."
-    }
-};
+let lang="ru";
+let lastAnalysis=null;
+let history=[];
 
-function setLanguage(language) {
-    currentLanguage = language;
-    const t = translations[language];
+const $=id=>document.getElementById(id);
+function t(key){return translations[lang][key]||key}
 
-    document.documentElement.lang = language;
-
-    document.getElementById("title").textContent = t.title;
-    document.getElementById("subtitle").textContent = t.subtitle;
-    document.getElementById("formTitle").textContent = t.formTitle;
-    document.getElementById("formDescription").textContent = t.formDescription;
-    document.getElementById("message").placeholder = t.placeholder;
-    document.getElementById("analyzeBtn").textContent = t.analyze;
-    document.getElementById("resultTitle").textContent = t.resultTitle;
-    document.getElementById("findingsTitle").textContent = t.findingsTitle;
-    document.getElementById("aboutTitle").textContent = t.aboutTitle;
-    document.getElementById("aboutText").textContent = t.aboutText;
-    document.getElementById("footerText").textContent = t.footer;
-    document.getElementById("disclaimer").textContent = t.disclaimer;
-
-    document.getElementById("ruBtn").classList.toggle("active", language === "ru");
-    document.getElementById("kzBtn").classList.toggle("active", language === "kz");
-
-    const result = document.getElementById("result");
-
-    if (result.style.display !== "none") {
-        if (lastAnalysis) {
-            displayAnalysis(lastAnalysis);
-        }
-    }
+function setLang(next){
+  lang=next;
+  $("ruBtn").classList.toggle("active",lang==="ru");
+  $("kzBtn").classList.toggle("active",lang==="kz");
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key=el.dataset.i18n;
+    el.innerHTML=t(key);
+  });
+  $("message").placeholder=t("placeholder");
+  if(lastAnalysis) renderResult(lastAnalysis);
+  renderHistory();
 }
 
-let lastAnalysis = null;
+$("message").addEventListener("input",()=>{
+  $("count").textContent=$("message").value.length;
+});
 
-function displayAnalysis(data) {
-    const t = translations[currentLanguage];
-
-    let levelText;
-    let levelColor;
-    let adviceText;
-
-    if (data.level === "HIGH") {
-        levelText = t.high;
-        levelColor = "#ff5252";
-        adviceText = t.highAdvice;
-    } else if (data.level === "MEDIUM") {
-        levelText = t.medium;
-        levelColor = "#ffb020";
-        adviceText = t.mediumAdvice;
-    } else {
-        levelText = t.low;
-        levelColor = "#35d39a";
-        adviceText = t.lowAdvice;
-    }
-
-    const level = document.getElementById("level");
-    level.textContent = levelText;
-    level.style.color = levelColor;
-
-    const score = document.getElementById("score");
-    score.textContent = data.score + "/100";
-    score.style.color = levelColor;
-
-    const bar = document.getElementById("barFill");
-    bar.style.width = data.score + "%";
-    bar.style.background = levelColor;
-
-    const findings = document.getElementById("findings");
-    findings.innerHTML = "";
-
-    if (data.findings && data.findings.length > 0) {
-        data.findings.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "finding";
-
-            const translated = findingTranslations[item.name];
-
-            const heading = document.createElement("strong");
-            heading.textContent = "⚠ " +
-                (currentLanguage === "kz" && translated
-                    ? translated.name
-                    : item.name) +
-                " (+" + item.points + ")";
-
-            const reason = document.createElement("p");
-            reason.textContent =
-                currentLanguage === "kz" && translated
-                    ? translated.reason
-                    : item.reason;
-
-            const phrases = document.createElement("p");
-            phrases.textContent = t.phrases + ": " +
-                (item.matched_phrases || []).join(", ");
-
-            div.appendChild(heading);
-            div.appendChild(reason);
-            div.appendChild(phrases);
-
-            findings.appendChild(div);
-        });
-    } else {
-        findings.textContent = t.noFindings;
-    }
-
-    document.getElementById("advice").textContent =
-        t.adviceTitle + ": " + adviceText;
+function demo(type){
+  $("message").value=type==="safe"
+    ?"Здравствуйте! Напоминаем, что завтра в 10:00 состоится встреча. Подробности доступны в официальном приложении."
+    :"СРОЧНО! Ваш банковский аккаунт заблокируют через 10 минут. Перейдите по ссылке http://example.com и введите номер карты, CVV и SMS-код для восстановления!";
+  $("count").textContent=$("message").value.length;
+  $("message").focus();
 }
 
-async function analyze() {
-    const t = translations[currentLanguage];
-    const message = document.getElementById("message").value.trim();
-    const result = document.getElementById("result");
-    const button = document.getElementById("analyzeBtn");
+async function analyze(){
+  const message=$("message").value.trim();
+  if(!message){alert(t("empty"));return}
+  const btn=$("checkBtn");
+  btn.disabled=true;
+  btn.textContent=t("checking");
+  try{
+    const response=await fetch("/api/analyze",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({message:message})
+    });
+    if(!response.ok) throw new Error("API error");
+    const data=await response.json();
+    lastAnalysis=data;
+    renderResult(data);
+    history.unshift({level:data.level,score:data.score});
+    history=history.slice(0,4);
+    renderHistory();
+    $("result").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(error){
+    alert(t("error"));
+  }finally{
+    btn.disabled=false;
+    btn.textContent=t("check");
+  }
+}
 
-    if (!message) {
-        alert(t.empty);
-        return;
-    }
+function renderResult(data){
+  const level=["HIGH","MEDIUM","LOW"].includes(data.level)?data.level:"LOW";
+  const score=Math.max(0,Math.min(100,Number(data.score)||0));
+  $("score").textContent=score;
+  $("status").className="status "+level;
+  $("status").textContent=t(level.toLowerCase());
+  $("barFill").className="bar-fill "+level;
+  $("barFill").style.width=score+"%";
 
-    button.disabled = true;
-    button.textContent = t.loading;
-    result.style.display = "block";
+  const advice=data.advice||t(level.toLowerCase()+"Advice");
+  $("advice").textContent=lang==="kz"?
+    t(level.toLowerCase()+"Advice"):advice;
 
-    document.getElementById("level").textContent = "";
-    document.getElementById("score").textContent = "";
-    document.getElementById("findings").textContent = "";
-    document.getElementById("advice").textContent = t.loading;
-    document.getElementById("barFill").style.width = "0%";
+  const findings=$("findings");
+  findings.innerHTML="";
+  if(!Array.isArray(data.findings)||data.findings.length===0){
+    findings.innerHTML='<div class="empty">'+t("noFindings")+'</div>';
+  }else{
+    data.findings.forEach(item=>{
+      const card=document.createElement("div");
+      card.className="finding";
+      const head=document.createElement("div");
+      head.className="finding-head";
+      const name=document.createElement("span");
+      name.textContent=translations[lang].names[item.name]||item.name||"Detected rule";
+      const points=document.createElement("span");
+      points.className="points";
+      points.textContent="+"+(Number(item.points)||0);
+      head.append(name,points);
+      const reason=document.createElement("p");
+      reason.textContent=translations[lang].reasons[item.name]||item.reason||"";
+      card.append(head,reason);
+      if(Array.isArray(item.matched_phrases)&&item.matched_phrases.length){
+        const matches=document.createElement("div");
+        matches.className="matches";
+        matches.textContent=(lang==="ru"?"Найденные фразы: ":"Табылған сөздер: ")+item.matched_phrases.join(", ");
+        card.append(matches);
+      }
+      findings.append(card);
+    });
+  }
+  $("result").classList.add("show");
+}
 
-    try {
-        const response = await fetch("/api/analyze", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ message: message })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || t.error);
-        }
-
-        lastAnalysis = data;
-        displayAnalysis(data);
-
-    } catch (error) {
-        document.getElementById("advice").textContent =
-            error.message || t.error;
-    } finally {
-        button.disabled = false;
-        button.textContent = translations[currentLanguage].analyze;
-    }
+function renderHistory(){
+  const list=$("historyList");
+  list.innerHTML="";
+  if(!history.length){
+    const empty=document.createElement("div");
+    empty.className="empty";
+    empty.textContent=t("noHistory");
+    list.append(empty);
+    return;
+  }
+  history.forEach(item=>{
+    const row=document.createElement("div");
+    row.className="history-item";
+    const label=document.createElement("span");
+    label.textContent=t("historyRisk");
+    const value=document.createElement("strong");
+    value.textContent=t(item.level.toLowerCase())+" · "+item.score+"/100";
+    row.append(label,value);
+    list.append(row);
+  });
+}
+function clearHistory(){
+  history=[];
+  renderHistory();
 }
 </script>
-
 </body>
 </html>
