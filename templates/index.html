@@ -36,6 +36,7 @@ header {
     font-size: 25px;
     font-weight: bold;
     color: #55a4ff;
+    letter-spacing: 1px;
 }
 
 .logo span {
@@ -155,10 +156,18 @@ textarea::placeholder {
 
 .finding {
     background: #192c43;
-    padding: 12px;
+    padding: 14px;
     border-radius: 9px;
-    margin: 8px 0;
+    margin: 10px 0;
     color: #e1eaf6;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.finding p {
+    margin: 8px 0 0;
+    color: #b8c9df;
+    font-size: 14px;
 }
 
 .advice {
@@ -197,8 +206,10 @@ footer {
     <div class="logo">BCC <span>QORGAU</span></div>
 
     <div class="lang">
-        <button id="ruBtn" class="active" onclick="setLanguage('ru')">RU</button>
-        <button id="kzBtn" onclick="setLanguage('kz')">KZ</button>
+        <button id="ruBtn" class="active"
+            onclick="setLanguage('ru')">RU</button>
+        <button id="kzBtn"
+            onclick="setLanguage('kz')">KZ</button>
     </div>
 </header>
 
@@ -217,13 +228,12 @@ footer {
         Вставь подозрительное SMS или сообщение:
     </p>
 
-    <textarea
-        id="message"
-        placeholder="Вставьте сообщение сюда..."
-    ></textarea>
+    <textarea id="message"
+        placeholder="Вставьте сообщение сюда..."></textarea>
 
-    <button class="analyze" id="analyzeBtn" onclick="analyze()">
-        Analyze message
+    <button class="analyze" id="analyzeBtn"
+        onclick="analyze()">
+        Проверить сообщение
     </button>
 
     <div class="result" id="result">
@@ -293,14 +303,7 @@ const translations = {
         mediumAdvice: "Будьте осторожны. Проверьте отправителя и содержание сообщения.",
         lowAdvice: "Явных признаков из нашей базы правил не обнаружено. Это не гарантирует безопасность сообщения.",
         noFindings: "Подозрительные признаки не обнаружены.",
-        names: {
-            "Запрос конфиденциальных данных": "Запрос конфиденциальных данных",
-            "Срочность и давление": "Срочность и давление",
-            "Подозрительная ссылка": "Подозрительная ссылка",
-            "Требование перевести деньги": "Требование перевести деньги",
-            "Обещание лёгкой выгоды": "Обещание лёгкой выгоды",
-            "Угроза или запугивание": "Угроза или запугивание"
-        }
+        phrases: "Найденные фразы"
     },
 
     kz: {
@@ -327,14 +330,7 @@ const translations = {
         mediumAdvice: "Сақ болыңыз. Жіберушіні және хабарлама мазмұнын тексеріңіз.",
         lowAdvice: "Ережелер базасынан айқын күдікті белгілер табылмады. Бұл хабарламаның қауіпсіз екеніне кепілдік бермейді.",
         noFindings: "Күдікті белгілер анықталмады.",
-        names: {
-            "Запрос конфиденциальных данных": "Құпия деректерді сұрау",
-            "Срочность и давление": "Асықтыру және қысым көрсету",
-            "Подозрительная ссылка": "Күдікті сілтеме",
-            "Требование перевести деньги": "Ақша аударуды талап ету",
-            "Обещание лёгкой выгоды": "Оңай пайда уәдесі",
-            "Угроза или запугивание": "Қорқыту немесе қоқан-лоқы"
-        }
+        phrases: "Табылған күдікті сөздер"
     }
 };
 
@@ -360,9 +356,7 @@ function setLanguage(language) {
     document.getElementById("ruBtn").classList.toggle("active", language === "ru");
     document.getElementById("kzBtn").classList.toggle("active", language === "kz");
 
-    if (document.getElementById("result").style.display === "block") {
-        document.getElementById("analyzeBtn").textContent = t.analyze;
-    }
+    document.getElementById("result").style.display = "none";
 }
 
 async function analyze() {
@@ -378,8 +372,8 @@ async function analyze() {
 
     button.disabled = true;
     button.textContent = t.loading;
-
     result.style.display = "block";
+
     document.getElementById("level").textContent = "";
     document.getElementById("score").textContent = "";
     document.getElementById("findings").textContent = "";
@@ -392,7 +386,7 @@ async function analyze() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({message: message})
         });
 
         const data = await response.json();
@@ -439,11 +433,20 @@ async function analyze() {
                 const div = document.createElement("div");
                 div.className = "finding";
 
-                const translatedName =
-                    t.names[item.name] || item.name;
+                const heading = document.createElement("strong");
+                heading.textContent = "⚠ " + item.name +
+                    " (+" + item.points + ")";
 
-                div.textContent =
-                    "⚠ " + translatedName + " — " + item.points;
+                const reason = document.createElement("p");
+                reason.textContent = item.reason;
+
+                const phrases = document.createElement("p");
+                phrases.textContent = t.phrases + ": " +
+                    (item.matched_phrases || []).join(", ");
+
+                div.appendChild(heading);
+                div.appendChild(reason);
+                div.appendChild(phrases);
 
                 findings.appendChild(div);
             });
